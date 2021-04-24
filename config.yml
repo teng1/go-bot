@@ -1,0 +1,9 @@
+goBotSettings:
+  gitConfig:
+    host: ssh://git@github.com/teng1/git-bot
+    port: 22
+    sshKeyLocation: "~/.ssh/id_rsa"
+  jiraConfig:
+    host: "https://issues.apache.org/jira/"
+    apiToken: ""
+    port: 443

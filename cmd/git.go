@@ -33,3 +33,24 @@ func InMemClone() {
 	// })
 
 }
+
+func Checkout() {
+	// r, err := g
+
+}
+
+func Add() {
+
+}
+
+func Commit() {
+
+}
+
+func Push() {
+
+}
+
+func PullRequest() {
+
+}
