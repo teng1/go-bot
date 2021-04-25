@@ -11,6 +11,34 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var help = `
+  Usage: go-bot [command] [--help]
+
+  Commands:
+    --docker-project - Create a template docker project, CI/CD pipeline, Jira Tickets and PR's. 
+    --helm-project - Create a template Helm chart project, CI/CD pipeline, Jira Tickets and PR's
+  
+  Read more:
+    https://github.com/teng1/go-bot
+
+
+`
+var dockerProject = `
+  --create [name], Creates a docker project and git repository with specified name. This
+  will also create a jira ticket, template Dockerfile and some documentation. PR's will 
+  be raised with our team to enable the CI/CD build pipeline and allow publishing to 
+  container registires. 
+
+
+`
+var helmProject = `
+  --create [name], Creates a template Helm project and git repository. This will also create
+  a Jira ticket, template Helm chart and some documentation to get started. PR's will be raised
+  with our team to enable the CI/CD build pipelines and enable publishing to chart repositories 
+  The
+
+`
+
 // Default constants
 // const (
 // 	defaultGitURL        = "https://github.com"
@@ -60,7 +88,7 @@ func readFile(cfg *Config) {
 	}
 }
 
-// Read envioronment variables
+// Read environment variables
 func readEnv(cfg *Config) {
 	err := envconfig.Process("", cfg)
 	if err != nil {
