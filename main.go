@@ -34,8 +34,8 @@ var dockerProject = `
 var helmProject = `
   --create [name], Creates a template Helm project and git repository. This will also create
   a Jira ticket, template Helm chart and some documentation to get started. PR's will be raised
-  with our team to enable the CI/CD build pipelines and enable publishing to chart repositories 
-  The
+  with our team to enable the CI/CD build pipelines and enable publishing to chart repositories
+  
 
 `
 
