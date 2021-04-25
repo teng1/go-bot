@@ -3,7 +3,10 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"os"
+	"time"
 
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
@@ -15,15 +18,15 @@ var help = `
   Usage: go-bot [command] [--help]
 
   Commands:
-    --docker-project - Create a template docker project, CI/CD pipeline, Jira Tickets and PR's. 
-    --helm-project - Create a template Helm chart project, CI/CD pipeline, Jira Tickets and PR's
+    docker-repo - Create a template docker project, CI/CD pipeline, Jira Tickets and PR's. 
+    helm-repo - Create a template Helm chart project, CI/CD pipeline, Jira Tickets and PR's
   
   Read more:
     https://github.com/teng1/go-bot
 
 
 `
-var dockerProject = `
+var dockerHelp = `
   --create [name], Creates a docker project and git repository with specified name. This
   will also create a jira ticket, template Dockerfile and some documentation. PR's will 
   be raised with our team to enable the CI/CD build pipeline and allow publishing to 
@@ -31,7 +34,7 @@ var dockerProject = `
 
 
 `
-var helmProject = `
+var helmHelp = `
   --create [name], Creates a template Helm project and git repository. This will also create
   a Jira ticket, template Helm chart and some documentation to get started. PR's will be raised
   with our team to enable the CI/CD build pipelines and enable publishing to chart repositories
@@ -40,16 +43,10 @@ var helmProject = `
 `
 
 // Default constants
-// const (
-// 	defaultGitURL        = "https://github.com"
-// 	defaultGitPort       = 22
-// 	defaultGitRepo       = "/teng1/gobot"
-// 	defaultGitSSHKeyPath = "~/.ssh/id_rsa"
-// 	defaultJiraURL       = "https://issues.apache.org/jira/"
-// 	defaultJiraToken     = ""
-// 	defaultTimeout       = 3 * time.Second
-// 	defaultWriteTimeout  = time.Duration(0) //wite() will not timeout
-// )
+const (
+	defaultTimeout      = 3 * time.Second
+	defaultWriteTimeout = time.Duration(0) //wite() will not timeout
+)
 
 type Config struct {
 	GoBotSettings struct {
@@ -89,6 +86,7 @@ func readFile(cfg *Config) {
 }
 
 // Read environment variables
+// env vars take precedence over config.yml
 func readEnv(cfg *Config) {
 	err := envconfig.Process("", cfg)
 	if err != nil {
@@ -96,46 +94,65 @@ func readEnv(cfg *Config) {
 	}
 }
 
-// Read command line arguments
-
+// Args branch, flags set params
 func main() {
-	var cfg Config
-	readFile(&cfg)
-	readEnv(&cfg)
-	log.Info("%v", cfg)
+
+	version := flag.Bool("version", false, "")
+	v := flag.Bool("v", false, "")
+	flag.Bool("help", false, "")
+	flag.Bool("h", false, "")
+	flag.Usage = func() {}
+	flag.Parse()
+
+	if *version || *v {
+		// TODO: Detect version
+		fmt.Println("0.0.1")
+		os.Exit(0)
+	}
+
+	args := flag.Args()
+
+	subcmd := ""
+	if len(args) > 0 {
+		subcmd = args[0]
+		args = args[1:]
+	}
+
+	switch subcmd {
+	case "docker-project":
+		dockerRepo(args)
+	// case "helm":
+	// 	client(args)
+	default:
+		fmt.Print(help)
+		os.Exit(0)
+	}
+}
+
+func dockerRepo(args []string) {
+
+	// dockerProj := flag.String("docker-project", "", dockerProject)
+	// helmProj := flag.String("helm-project", "", helmProject)
+
+	// flag.Usage = func() {
+	// 	fmt.Printf(help, os.Args[0])
+	// 	flag.PrintDefaults()
+	// }
+
+	// var cfg Config
+	// readFile(&cfg)
+	// readEnv(&cfg)
+
+	// flag.Parse()
+
+	// log.Info(*dockerProj)
+	// log.Info(*helmProj)
+
+	// log.Info("%v", cfg)
 	cmd.Demo()
 	cmd.InMemClone()
 }
 
-// func newWithDialer(config Config)  {
-// 	if config.FluentNetwork == "" {
-// 		config.FluentNetwork = defaultNetwork
-// 	}
-// 	if config.FluentHost == "" {
-// 		config.FluentHost = defaultHost
-// 	}
 // 	if config.FluentPort == 0 {
 // 		config.FluentPort = defaultPort
-// 	}
-// 	if config.FluentSocketPath == "" {
-// 		config.FluentSocketPath = defaultSocketPath
-// 	}
-// 	if config.WriteTimeout == 0 {
-// 		config.WriteTimeout = defaultWriteTimeout
-// 	}
-// 	if config.BufferLimit == 0 {
-// 		config.BufferLimit = defaultBufferLimit
-// 	}
-// 	if config.RetryWait == 0 {
-// 		config.RetryWait = defaultRetryWait
-// 	}
-// 	if config.MaxRetry == 0 {
-// 		config.MaxRetry = defaultMaxRetry
-// 	}
-// 	if config.MaxRetryWait == 0 {
-// 		config.MaxRetryWait = defaultMaxRetryWait
-// 	}
-// 	if config.AsyncConnect {
-// 		fmt.Fprintf(os.Stderr, "fluent#New: AsyncConnect is now deprecated, please use Async instead")
-// 		config.Async = config.Async || config.AsyncConnect
 // 	}
