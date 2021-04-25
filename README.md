@@ -1,3 +1,3 @@
 # go-bot
 
-Practicing golang interfaces 
+Practice automating gitops workflows, Jira ticket creation and bootstrapping common dev projects with golang. 
